@@ -5,10 +5,31 @@ import movers.Point;
 
 import java.util.*;
 public class GameLand
-{ 
+{
+	private static volatile GameLand instance;
+
+	public static GameLand getInstance() {
+		GameLand localInstance = instance;
+		if (localInstance == null) {
+			synchronized (GameLand.class) {
+				localInstance = instance;
+				if (localInstance == null) {
+					instance = localInstance = new GameLand();
+				}
+			}
+		}
+		return localInstance;
+	}
+
+
+	private GameLand() {
+	}
+
 	private final int size=10;
-	MobModel[][] array = new MobModel[size][size];
+	MobModel[][] array;
+
 	public void setlle(List<MobModel> entryes){
+		array = new MobModel[size][size];
 		if(entryes.size()>size*size){
 			return;
 		}
@@ -32,19 +53,19 @@ public class GameLand
 					Point point=src.move(i,j);
 					if(!point.equals(new Point(i,j))) {
 						array[i][j]=null;
-						MobModel dst=array[point.x][point.y];
-						array[point.x][point.y]=null;
+						MobModel dst=array[point.getX()][point.getY()];
+						array[point.getX()][point.getY()]=null;
 						if (dst == null) {
-							dst=newarray[point.x][point.y];
-							newarray[point.x][point.y]=null;
+							dst=newarray[point.getX()][point.getY()];
+							newarray[point.getX()][point.getY()]=null;
 						}
 						if (dst != null) {
 							System.out.print("Battle:"+src+" vs "+dst);
 							src = src.attack(dst);
-							newarray[point.x][point.y]=src;
+							newarray[point.getX()][point.getY()]=src;
 							System.out.println(" Winner:"+src);
 						}else{
-							newarray[point.x][point.y] = src;
+							newarray[point.getX()][point.getY()] = src;
 						}
 					}else{
 						newarray[i][j]=array[i][j];
