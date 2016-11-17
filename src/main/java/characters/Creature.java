@@ -9,6 +9,7 @@ public class Creature implements MobModel
 {
 	private Damager dps;
 	private double helth;
+	private boolean turn;
 	public Creature(Damager dps, double helth){
 		this.helth=helth;
 		this.dps=dps;
@@ -29,13 +30,6 @@ public class Creature implements MobModel
 		this.helth = helth;
 	}
 
-
-
-	public Point move(int x, int y)
-	{
-		return Mover.move(x,y, MoveAction.go);
-	}
-
 	public double damage(double uron) {
 		setHelth(getHelth()-uron);
 		return getHelth();
@@ -52,6 +46,18 @@ public class Creature implements MobModel
 			return target.attack(this);
 		}
 		return this;
+	}
+
+	public boolean hasTurn() {
+		return turn;
+	}
+
+	public void setTurn(boolean turn) {
+		this.turn=turn;
+	}
+
+	public MoveAction getMoveAction() {
+		return MoveAction.go;
 	}
 
 	public void draw()

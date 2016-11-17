@@ -42,10 +42,11 @@ public class Player extends Creature
             return this;
         }
     }
-    Point nowPoint;
+    public final Point nowPoint = new Point(0, 0);
     public Point move(int x, int y) {
-        nowPoint = new Point(x, y);
         synchronized (nowPoint) {
+            nowPoint.setX(x);
+            nowPoint.setY(y);
             try {
                 nowPoint.wait();
             } catch (InterruptedException e) {
@@ -78,11 +79,11 @@ public class Player extends Creature
     }
 
     public void setAction(MoveAction action) {
-        if(nowPoint!=null){
-            synchronized(nowPoint){
-                nowPoint = Mover.move(nowPoint, action);
-                nowPoint.notify();
-            }
+        Point newPoint = Mover.move(nowPoint, action);
+        synchronized(nowPoint){
+            nowPoint.setX(newPoint.getX());
+            nowPoint.setY(newPoint.getY());
+            nowPoint.notifyAll();
         }
     }
 }
