@@ -11,12 +11,18 @@ public class NPC extends Creature
         super(dps, helth);
     }
 
+//    @Override
+//    public Point move(int x, int y) {
+//        return Mover.move(x,y, MoveAction.stay);
+//    }
     @Override
-    public Point move(int x, int y) {
-        return Mover.move(x,y, MoveAction.stay);
+    public MoveAction getMoveAction() {
+        super.getMoveAction();
+        return MoveAction.stay;
     }
     @Override
     public MobModel attack(MobModel target) {
+        if(target==null)return null;
         if(target.getClass()==Player.class){
             target.damage(-10);
             ((Player)target).addItem(new Damager(5,10));

@@ -8,7 +8,7 @@ public interface MobModel
 	MobModel attack(MobModel target);
 	//Point move(int x, int y);
 	boolean hasTurn();
-	void setTurn(boolean turn);
+	void setTurn();
 	MoveAction getMoveAction();
 	double damage(double uron);
 	boolean isAlive();

@@ -33,6 +33,7 @@ public class Player extends Creature
 
     public MobModel attack(MobModel target)
     {
+        if(target==null)return this;
         if(target.getClass()==NPC.class){
             return target.attack(this);
         }else {
@@ -41,19 +42,6 @@ public class Player extends Creature
             }
             return this;
         }
-    }
-    public final Point nowPoint = new Point(0, 0);
-    public Point move(int x, int y) {
-        synchronized (nowPoint) {
-            nowPoint.setX(x);
-            nowPoint.setY(y);
-            try {
-                nowPoint.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        return nowPoint;
     }
 
     public void draw()
@@ -78,12 +66,28 @@ public class Player extends Creature
         getDps().addItem(damager);
     }
 
+    private MoveAction action;
+
+    private final Object mutex=new Object();
+    @Override
+    public MoveAction getMoveAction() {
+//        System.out.print("Payer wait action");
+        synchronized (mutex) {
+            try {
+                mutex.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+//        System.out.print("Payer have action");
+        super.getMoveAction();
+        return action;
+    }
+
     public void setAction(MoveAction action) {
-        Point newPoint = Mover.move(nowPoint, action);
-        synchronized(nowPoint){
-            nowPoint.setX(newPoint.getX());
-            nowPoint.setY(newPoint.getY());
-            nowPoint.notifyAll();
+        synchronized(this.mutex){
+            this.action=action;
+            mutex.notifyAll();
         }
     }
 }

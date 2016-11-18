@@ -42,7 +42,7 @@ public class Creature implements MobModel
 
 	public MobModel attack(MobModel target)
 	{
-		if(target.damage(getDps().damage())>=0){
+		if(target!=null && target.damage(getDps().damage())>=0){
 			return target.attack(this);
 		}
 		return this;
@@ -52,11 +52,12 @@ public class Creature implements MobModel
 		return turn;
 	}
 
-	public void setTurn(boolean turn) {
-		this.turn=turn;
+	public void setTurn() {
+		this.turn=true;
 	}
 
 	public MoveAction getMoveAction() {
+		this.turn=false;
 		return MoveAction.go;
 	}
 
