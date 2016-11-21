@@ -5,12 +5,9 @@ import movers.MoveAction;
 import movers.Mover;
 import movers.Point;
 
-public class Creature implements MobModel
+public class Creature extends MobModel
 {
-	private Damager dps;
-	private double helth;
-	private boolean turn;
-	private MoveAction moveAction;
+	protected MoveAction moveAction;
 	public Creature(Damager dps, double helth){
 		this.helth=helth;
 		this.dps=dps;
@@ -49,18 +46,9 @@ public class Creature implements MobModel
 		return this;
 	}
 
-	public boolean hasTurn() {
-		return turn;
-	}
 
 	public void setAction(MoveAction action) {
-		moveAction=action;
-		//this.turn=true;
-	}
-
-	public MoveAction getMoveAction() {
-		//this.turn=false;
-		return MoveAction.go;
+		moveAction=MoveAction.go;
 	}
 
 	public void draw()
