@@ -1,3 +1,4 @@
+package engine;
 
 import characters.Creature;
 import characters.MobModel;
@@ -8,7 +9,7 @@ import java.util.*;
 public class GameLand
 {
 	private static volatile GameLand instance;
-	private Integer countTurns;
+
 	public static GameLand getInstance() {
 		GameLand localInstance = instance;
 		if (localInstance == null) {
@@ -28,6 +29,8 @@ public class GameLand
 
 	private final int size=10;
 	MobModel[][] array;
+	private Integer countTurns;
+	private boolean setlled=false;
 	public void setlle(List<MobModel> entries) {
 		if(entries.size()>size*size){
 			return;
@@ -43,39 +46,12 @@ public class GameLand
 			}
 			array[x][y]=entries.remove(0);
 		}
+		setlled=true;
 	}
-/*	public void move(){
-		//HashMap<Point,MobModel> newSetlleMap = new HashMap<Point,MobModel>();
-//		turnEnd=false;
-		Iterator entries = setlleMap.values().iterator();
-		while (entries.hasNext()){
-			((MobModel)entries.next()).setTurn();
-		}
-		entries = setlleMap.entrySet().iterator();
-		while (entries.hasNext()){
-			Map.Entry<Point,MobModel> pair= (Map.Entry<Point, MobModel>) entries.next();
-			//Point newPoint=pair.getValue().move(pair.getKey().getX(),pair.getKey().getY());
-			if(!pair.getValue().hasTurn())continue;
 
-			Point newPoint= Mover.move(pair.getKey(),pair.getValue().getMoveAction());
-			if(!newPoint.equals(pair.getKey())){
-				entries.remove();
-				if(setlleMap.containsKey(newPoint)){
-					//BATLLE
-					MobModel winner=pair.getValue().attack(setlleMap.remove(newPoint));
-					setlleMap.put(newPoint, winner);
-				}else{
-					setlleMap.put(newPoint, pair.getValue());
-				}
-			}else{
-				setlleMap.put(pair.getKey(), pair.getValue());
-			}
-		}
-		synchronized (countTurns) {
-			countTurns++;
-			countTurns.notifyAll();
-		}
-	}*/
+	public boolean isSettle(){
+		return setlled;
+	}
 
 	public void move(){
 			for(int i=0;i<size;i++) {
@@ -109,6 +85,7 @@ public class GameLand
 				}
 			}
 		}
+		if(count==0)setlled=false;
 		return count;
 	}
 	public void draw(){

@@ -2,10 +2,11 @@ import characters.Creature;
 import characters.MobModel;
 import characters.NPC;
 import characters.Player;
+import engine.GameLand;
+import engine.GameThread;
 import items.Damager;
 import movers.ConsoleInput;
 
-import java.io.IOException;
 import java.util.*;
 
 import static java.lang.Thread.sleep;

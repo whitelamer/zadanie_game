@@ -1,3 +1,5 @@
+package engine;
+
 import characters.Player;
 
 /**
@@ -28,23 +30,13 @@ public class GameThread extends Thread {
     {
         gameLand=GameLand.getInstance();
         player=Player.getInstance();
-        int creatures=gameLand.countCreature();
-        //gameLand.draw();
-        //System.out.print("Creatures alive:"+creatures+" ");
-        //System.out.println(player);
-
+        int creatures;
         while(player.isAlive()){
-                gameLand.move();
-                //gameLand.notifyAll();
-                creatures = gameLand.countCreature();
-            //if(player.isAlive()&&creatures>0)gameLand.draw();
+            gameLand.move();
+            creatures = gameLand.countCreature();
             if(creatures==0) {
-                //System.out.println("PLAYER WIN");
                 return;
             }
-            //System.out.print("Creatures alive:"+creatures+" ");
-            //System.out.println(player);
         }
-        //System.out.println("GAME OVER");
     }
 }
