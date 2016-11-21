@@ -46,8 +46,8 @@ public class Player extends Creature
 
     public void draw()
     {
-        //U+1F6B9
-        System.out.print("\uD83D\uDEB9");
+        //U+1F6B9\uD83D
+        System.out.print("\uDEB9");
     }
 
     public boolean isAlive(){
