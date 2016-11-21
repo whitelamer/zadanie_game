@@ -88,6 +88,9 @@ public class GameLand
 		if(count==0)setlled=false;
 		return count;
 	}
+	public MobModel[][] settleMap(){
+		return array;
+	}
 	public void draw(){
 		System.out.println('\n');
 		for(int i=0;i<size;i++){
