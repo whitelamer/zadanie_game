@@ -37,6 +37,7 @@ public class GameLand
 		}
 		countTurns=0;
 		array = new MobModel[size][size];
+		
 		while(entries.size()>0){
 			int x=(int) (Math.random()*(double)size);
 			int y=(int) (Math.random()*(double)size);
@@ -57,17 +58,23 @@ public class GameLand
 			for(int i=0;i<size;i++) {
 				for (int j = 0; j < size; j++) {
 					if (array[i][j] != null) {
-						array[i][j].setTurn();
+						array[i][j].setAction(null);
 					}
 				}
 			}
+			
+			
 			for(int i=0;i<size;i++){
 				for(int j=0;j<size;j++){
+					
 					if(array[i][j]!=null && array[i][j].hasTurn()){
 						MobModel src=array[i][j];
+						
 						Point point=Mover.move(i,j,src.getMoveAction());
+						
 						if(!point.equals(new Point(i,j))) {
 							array[i][j]=null;
+							
 							array[point.getX()][point.getY()]=src.attack(array[point.getX()][point.getY()]);
 						}
 					}
@@ -91,6 +98,7 @@ public class GameLand
 	public MobModel[][] settleMap(){
 		return array;
 	}
+	
 	public void draw(){
 		System.out.println('\n');
 		for(int i=0;i<size;i++){
@@ -104,7 +112,6 @@ public class GameLand
 			}
 			System.out.println('|');
 		}
-
 	}
 
 	public int getTurn() {

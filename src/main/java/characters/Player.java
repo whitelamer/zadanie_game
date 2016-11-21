@@ -70,7 +70,8 @@ public class Player extends Creature
 
     private final Object mutex=new Object();
     @Override
-    public MoveAction getMoveAction() {
+    public MoveAction genMoveAction() {
+    	
 //        System.out.print("Payer wait action");
         synchronized (mutex) {
             try {

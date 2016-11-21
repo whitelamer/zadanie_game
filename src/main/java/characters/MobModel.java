@@ -26,6 +26,7 @@ public abstract class MobModel
 		moveAction=MoveAction.stay;
 		return ret;
 	}
+	
 	abstract double damage(double uron);
 	abstract boolean isAlive();
 	abstract void draw();

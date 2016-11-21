@@ -15,7 +15,9 @@ public class Mover {
         if(action==MoveAction.go){
             action=MoveAction.getRandomMoveAction();
         }
+        
         Point newPoint=new Point(point.getX(),point.getY());
+        
         if(action==MoveAction.stay)return newPoint;
         switch (action){
             case left:

@@ -29,8 +29,9 @@ public class Main
         GameLand.getInstance().setlle(allmobs);
         GameThread.getInstance().start();
 
-
         ConsoleInput.getInstance().start();
+        
+        
         Thread ConsoleDraw =new Thread(new Runnable() {
             public void run() {
                 Player player= Player.getInstance();
@@ -61,6 +62,7 @@ public class Main
                 }
             }
         });
+        
         ConsoleDraw.start();
     }
 }
