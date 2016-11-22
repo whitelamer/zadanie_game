@@ -1,8 +1,5 @@
-package items;
+package attakers;
 
-/**
- * Created by user on 16.11.16.
- */
 public class Damager {
     public double getMin_damage() {
         return min_damage;

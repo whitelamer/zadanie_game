@@ -1,120 +1,142 @@
 package engine;
 
+import attakers.Battle;
+import attakers.AttackbleEntity;
 import characters.Creature;
-import characters.MobModel;
+import characters.DrawableEntity;
+import characters.Entity;
+import movers.MovableEntity;
+import movers.MoveAction;
 import movers.Mover;
 import movers.Point;
 
 import java.util.*;
+
 public class GameLand
 {
-	private static volatile GameLand instance;
-
-	public static GameLand getInstance() {
-		GameLand localInstance = instance;
-		if (localInstance == null) {
-			synchronized (GameLand.class) {
-				localInstance = instance;
-				if (localInstance == null) {
-					instance = localInstance = new GameLand();
-				}
-			}
-		}
-		return localInstance;
+	//	private static volatile GameLand instance;
+//
+//	public static GameLand getInstance() {
+//		GameLand localInstance = instance;
+//		if (localInstance == null) {
+//			synchronized (GameLand.class) {
+//				localInstance = instance;
+//				if (localInstance == null) {
+//					instance = localInstance = new GameLand();
+//				}
+//			}
+//		}
+//		return localInstance;
+//	}
+	GameLand(int size) {
+		this.size=size;
 	}
 
+	private int size;
+	MovableEntity[][] settleMap;
+	HashMap<Point, Battle> battleMap;
 
-	private GameLand() {
-	}
-
-	private final int size=10;
-	MobModel[][] array;
-	private Integer countTurns;
 	private boolean setlled=false;
-	public void setlle(List<MobModel> entries) {
+	private int creatureCount;
+
+	public void setlle(List<MovableEntity> entries) {
 		if(entries.size()>size*size){
 			return;
 		}
-		countTurns=0;
-		array = new MobModel[size][size];
-		
+
+		settleMap = new MovableEntity[size][size];
+
 		while(entries.size()>0){
 			int x=(int) (Math.random()*(double)size);
 			int y=(int) (Math.random()*(double)size);
-			while(array[x][y]!=null){
+			while(settleMap[x][y]!=null){
 				x=(int) (Math.random()*(double)size);
 				y=(int) (Math.random()*(double)size);
 			}
-			array[x][y]=entries.remove(0);
+			settleMap[x][y]=entries.remove(0);
 		}
 		setlled=true;
 	}
+
 
 	public boolean isSettle(){
 		return setlled;
 	}
 
-	public void move(){
-			for(int i=0;i<size;i++) {
-				for (int j = 0; j < size; j++) {
-					if (array[i][j] != null) {
-						array[i][j].setAction(null);
-					}
+	public void doMovements(){
+		for(int i=0;i<size;i++) {
+			for (int j = 0; j < size; j++) {
+				if (settleMap[i][j] != null) {
+					settleMap[i][j].setAction(MoveAction.go);
 				}
 			}
-			
-			
-			for(int i=0;i<size;i++){
-				for(int j=0;j<size;j++){
-					
-					if(array[i][j]!=null && array[i][j].hasTurn()){
-						MobModel src=array[i][j];
-						
-						Point point=Mover.move(i,j,src.getMoveAction());
-						
-						if(!point.equals(new Point(i,j))) {
-							array[i][j]=null;
-							
-							array[point.getX()][point.getY()]=src.attack(array[point.getX()][point.getY()]);
-						}
+		}
+
+		battleMap=new HashMap<Point, Battle>();
+		for(int i=0;i<size;i++){
+			for(int j=0;j<size;j++){
+
+				if(settleMap[i][j]!=null){
+					Point point=Mover.doMove(i,j,settleMap[i][j]);
+
+					Battle battle=battleMap.get(point);
+					if(battle==null){
+						battle=new Battle();
+						battleMap.put(point,battle);
 					}
+					battle.addEntity((AttackbleEntity) settleMap[i][j]);
 				}
 			}
-		countTurns++;
+		}
+	}
+
+	public void doBattles(){
+		if(battleMap==null)return;
+		MovableEntity[][] newSettleMap = new MovableEntity[size][size];
+		int creatureCount=0;
+		boolean setlled=false;
+		for(Point battlePoint : battleMap.keySet()){
+			AttackbleEntity winner=battleMap.get(battlePoint).getWiner();
+
+			if(winner.getClass() == Creature.class){
+				creatureCount++;
+				setlled=true;
+			}
+
+			newSettleMap[battlePoint.getX()][battlePoint.getY()] = (MovableEntity) winner;
+
+		}
+		this.setlled=setlled;
+		this.creatureCount=creatureCount;
+		settleMap=newSettleMap;
 	}
 
 	public int countCreature(){
-		int count=0;
-		for(int i=0;i<size;i++) {
-			for (int j = 0; j < size; j++) {
-				if (array[i][j] != null && array[i][j].getClass()== Creature.class) {
-					count++;
-				}
-			}
-		}
-		if(count==0)setlled=false;
-		return count;
-	}
-	public MobModel[][] settleMap(){
-		return array;
-	}
-	
-	public void draw(){
-		System.out.println('\n');
-		for(int i=0;i<size;i++){
-			for(int j=0;j<size;j++){
-				if(array[i][j]!=null){
-					array[i][j].draw();
-				}else{
-					//System.out.print('\u0DF4');
-					System.out.print('_');
-				}
-			}
-			System.out.println('|');
-		}
+		return creatureCount;
 	}
 
-	public int getTurn() {
-		return countTurns;
+	public DrawableEntity[][] getSettleMap(){
+		DrawableEntity[][] drawMap=new DrawableEntity[size][size];
+		for(int i=0;i<settleMap.length;i++) {
+			for (int j = 0; j < settleMap[i].length; j++) {
+				drawMap[i][j]=(DrawableEntity)settleMap[i][j];
+			}
+		}
+		return drawMap;//(DrawableEntity[][])settleMap;
 	}
+
+//	public void draw(){
+//		System.out.println('\n');
+//		for(int i=0;i<size;i++){
+//			for(int j=0;j<size;j++){
+//				if(array[i][j]!=null){
+//					array[i][j].draw();
+//				}else{
+//					//System.out.print('\u0DF4');
+//					System.out.print('_');
+//				}
+//			}
+//			System.out.println('|');
+//		}
+//	}
 }

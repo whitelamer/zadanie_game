@@ -1,36 +1,35 @@
 package characters;
 
-import items.Damager;
+import attakers.AttackbleEntity;
+import attakers.Damager;
 import movers.MoveAction;
-import movers.Mover;
-import movers.Point;
 
-public class NPC extends Creature
+public class NPC extends Entity
 {
     public NPC(Damager dps, double helth) {
-        super(dps, helth);
+        this.helth=helth;
+        this.dps=dps;
     }
 
 	public void setAction(MoveAction action) {
 		moveAction=MoveAction.stay;
 	}
 	
-    @Override
-    public MobModel attack(MobModel target) {
+    public AttackbleEntity doAttack(AttackbleEntity target) {
         if(target==null)return null;
         if(target.getClass()==Player.class){
-            target.damage(-10);
+            target.doDamage(-10);
             ((Player)target).addItem(new Damager(5,10));
             return target;
         }else {
-            return super.attack(target);
+            return super.doAttack(target);
         }
     }
 
-    @Override
-    public void draw() {
-        System.out.print('\u263A');
-    }
+//    @Override
+//    public void draw() {
+//        System.out.print('\u263A');
+//    }
 
     @Override
     public String toString() {

@@ -1,6 +1,7 @@
 package movers;
 
 import characters.Player;
+import engine.GameThread;
 
 import java.util.Scanner;
 
@@ -40,7 +41,7 @@ public class ConsoleInput extends Thread {
             String direction=scan.next();
             try {
                 MoveAction action=MoveAction.valueOf(direction);
-                Player.getInstance().setAction(action);
+                GameThread.getInstance().getPlayer().setAction(action);
             }catch (IllegalArgumentException e){
                 System.out.println("input error");
             }

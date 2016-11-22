@@ -1,21 +1,21 @@
 package movers;
 
-import movers.MoveAction;
-
 /**
  * Created by user on 16.11.16.
  */
 public class Mover {
-    public static Point move(int x, int y, MoveAction action) {
+    public static Point doMove(int x, int y, MovableEntity entity) {
         Point point=new Point(x,y);
-        return move(point, action);
+        return doMove(point, entity);
     }
 
-    public static Point move(Point point, MoveAction action){
+    public static Point doMove(Point point, MovableEntity entity){
+        MoveAction action = entity.doAction();
+
         if(action==MoveAction.go){
             action=MoveAction.getRandomMoveAction();
         }
-        
+
         Point newPoint=new Point(point.getX(),point.getY());
         
         if(action==MoveAction.stay)return newPoint;
