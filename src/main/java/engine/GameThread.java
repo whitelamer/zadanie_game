@@ -67,12 +67,19 @@ public class GameThread extends Thread {
     }
     public void run()
     {
-        while(player.isAlive()){
-            gameLand.doMovements();
-            gameLand.doBattles();
-            countTurns++;
-            if(gameLand.countCreature()==0) {
-                return;
+        while(!interrupted()) {
+            while (player.isAlive()) {
+                gameLand.doMovements();
+                gameLand.doBattles();
+                countTurns++;
+//                if (gameLand.countCreature() == 0) {
+//                    return;
+//                }
+            }
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
