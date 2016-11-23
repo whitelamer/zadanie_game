@@ -6,6 +6,7 @@ import movers.MovableEntity;
 import characters.NPC;
 import characters.Player;
 import attakers.Damager;
+import movers.MoveAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,13 +50,16 @@ public class GameThread extends Thread {
 
         List<MovableEntity> setlleList=new ArrayList<MovableEntity>();
         fillSettle(setlleList);
-
+        if(player!=null){
+            player.doDamage(999);
+            player.setAction(MoveAction.stay);
+        }
         player=new Player(new Damager(1,10),10);
         setlleList.add(player);
 
         gameLand.setlle(setlleList);
         countTurns=0;
-        start();
+        if(!isAlive())start();
     }
 
     public int countCreature(){
@@ -68,7 +72,7 @@ public class GameThread extends Thread {
     public void run()
     {
         while(!interrupted()) {
-            while (player.isAlive()) {
+            while (player.isAlive() && gameLand.isSettle()) {
                 gameLand.doMovements();
                 gameLand.doBattles();
                 countTurns++;
